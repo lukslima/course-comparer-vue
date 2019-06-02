@@ -14,10 +14,10 @@
         </b-col>
       </b-row>
 
-      <Card 
+      <Card
         courseName="Teste"
         cardName="Resumo do curso"
-      />  
+      />
 
       <div v-for="section in sections" :key="section.id" >
         <b-button block
@@ -28,7 +28,7 @@
         >
           {{ section.descricao }}]
         </b-button>
-        
+
         <b-collapse id="collapse-4" v-model="section.showCollapse" class="mt-2">
           <b-card>I should start open!</b-card>
         </b-collapse>
@@ -38,9 +38,11 @@
 </template>
 
 <script>
-import Card from '~/components/card';
+import axios from 'axios';
+import Card from '~/components/card'
 import VueSimpleSuggest from 'vue-simple-suggest'
 import 'vue-simple-suggest/dist/styles.css'
+import $ from 'jquery'
 
 export default {
   name: 'CourseSearch',
@@ -60,6 +62,23 @@ export default {
         {id: 6, descricao: 'Onde o profissional trabalha', showCollapse: true},
         {id: 7, descricao: 'Quanto ganha', showCollapse: true},
       ],
+      cursos: {
+        'administracao':'Administração',
+        'analise-e-desenvolvimento-de-sistemas': 'Análise e Desenvolvimento',
+        'ciencias-contabeis':'Ciências Contábeis',
+        'direito':'Direito',
+        'educacao-fisica': 'Educação Física',
+        'enfermagem': 'Enfermagem',
+        'engenharia-civil': 'Engenharia Civil',
+        'farmacia': 'Farmácia',
+        'fisioterapia': 'Fisioterapia',
+        'gestao-de-recursos-humanos': 'Gestão de Recusos Humanos',
+        'logistica': 'Logística',
+        'nutricao': 'Nutrição',
+        'pedagogia':'Pedagogia',
+        'psicologia': 'Psicologia',
+        'servico-social': 'Serviço Social',
+      },
     }
   },
   props: {
@@ -68,16 +87,37 @@ export default {
     }
   },
   methods: {
-    simpleSuggestionList() {
-      return [
-        'Vue.js',
-        'React.js',
-        'Angular.js'
-      ]
+    async simpleSuggestionList() {
+      let courseDiscription = [];
+
+      Object.keys(this.cursos).forEach((key) => {
+        courseDiscription.push(this.cursos[key]);
+      });
+
+      return courseDiscription;
     },
-    onSuggestSelect(value) {
-      console.log(`Valor escolhido ${value}`);
-    }
+    async onSuggestSelect(value) {
+      let slug = this.getSlug(value);
+
+      let { data } = await axios.get(`https://10.2.143.71:5000/search/${slug}`);
+      debugger;
+      return { title: data.title };
+    },
+
+    getSlug(value){
+      let slug;
+      Object.keys(this.cursos).forEach((key) => {
+        console.log('param value: ' + value);
+        console.log('object key: ' + this.cursos[key]);
+        console.log('result: ' + (this.cursos[key] === value));
+        if(this.cursos[key] === value) {
+          slug = key;
+          return;
+        }
+      });
+
+      return slug;
+    },
   },
   async asyncData ({ params }) {
     // let { data } = await axios.get(`https://my-api/posts/${params.id}`)
