@@ -5,9 +5,19 @@
           <label for="asdf" >Carreira {{ courseNumber }}</label>
         </b-col>
         <b-col sm="8">
-          <b-form-input id="asdf" type="text"></b-form-input>
+          <vue-simple-suggest
+            v-model="chosen"
+            :list="simpleSuggestionList"
+            :filter-by-query="true"
+            @select="onSuggestSelect">
+          </vue-simple-suggest>
         </b-col>
       </b-row>
+
+      <Card 
+        courseName="Teste"
+        cardName="Resumo do curso"
+      />  
 
       <div v-for="section in sections" :key="section.id" >
         <b-button block
@@ -16,7 +26,7 @@
           aria-controls="collapse-4"
           @click="section.showCollapse = !section.showCollapse"
         >
-          {{ section.descricao }}
+          {{ section.descricao }}]
         </b-button>
         
         <b-collapse id="collapse-4" v-model="section.showCollapse" class="mt-2">
@@ -28,13 +38,19 @@
 </template>
 
 <script>
+import Card from '~/components/card';
+import VueSimpleSuggest from 'vue-simple-suggest'
+import 'vue-simple-suggest/dist/styles.css'
 
 export default {
   name: 'CourseSearch',
   components: {
+    Card,
+    VueSimpleSuggest,
   },
   data() {
     return {
+      chosen: '',
       sections: [
         {id: 1, descricao: 'Sobre', showCollapse: true},
         {id: 2, descricao: 'O que faz', showCollapse: true},
@@ -48,7 +64,19 @@ export default {
   },
   props: {
     courseNumber: {
-      type: String,
+      type: Number,
+    }
+  },
+  methods: {
+    simpleSuggestionList() {
+      return [
+        'Vue.js',
+        'React.js',
+        'Angular.js'
+      ]
+    },
+    onSuggestSelect(value) {
+      console.log(`Valor escolhido ${value}`);
     }
   },
   async asyncData ({ params }) {
