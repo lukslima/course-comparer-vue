@@ -2,75 +2,36 @@
   <section class="container">
     <div>
       <h1 class="title">
-        Comparar Cursos
+        Comparador de Carreiras
       </h1>
     </div>
 
     <div>
-      <b-button
-        :class="showCollapse ? 'collapsed' : null"
-        :aria-expanded="showCollapse ? 'true' : 'false'"
-        aria-controls="collapse-4"
-        @click="showCollapse = !showCollapse"
-      >
-        Toggle Collapse
-      </b-button>
-      <b-collapse id="collapse-4" v-model="showCollapse" class="mt-2">
-        <b-card>I should start open!</b-card>
-      </b-collapse>
+      <b-row>
+        <b-col v-for="courseNumber in courseNumbers" :key="courseNumber">
+          <CourseSearch 
+            :courseNumber="courseNumber"
+          />
+        </b-col>
+      </b-row>
     </div>
-
-    <table>
-      <thead>
-      </thead>
-      <tbody>
-      </tbody>
-    </table>
   </section>
 </template>
 
 <script>
+import CourseSearch from '~/components/course-search';
 
 export default {
   components: {
+    CourseSearch
   },
   data() {
-      return {
-        showCollapse: true
-      }
+    return {
+      courseNumbers: [1, 2],
     }
+  }
 }
 </script>
 
 <style>
-/* .container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-.title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
-} */
 </style>
